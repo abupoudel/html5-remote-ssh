@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<title>HTML5 Websocket based Remote SSH Connector</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/2.9.2/xterm.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/2.9.2/xterm.js"></script>
+		<style>
+		</style>
+	</head>
+	<body>
+		<div id="shellArea"></div>
+	</body>
+	<script type="text/javascript">
+		// We define the shell Area
+		var term = new Terminal({
+			cols: 80,  // Set the terminal's width to 80 columns
+			rows: 24  // Set the terminal's height to 24 rows
+		});
+		var ssh_ready = false;
+		term.open(document.getElementById('shellArea'),true);
+		
+		var mainSocket = new WebSocket("ws://localhost:13254/"); // Change it to your server address
+		var mainDiv = document.getElementById('shellArea');
+		
+		mainSocket.onopen = function (event) {
+			// Hurray, we area ready for connection
+			console.log("Socket open success");
+			// This is the connection string that you need to invoke when the connection to our Python script is ready.
+			mainSocket.send(JSON.stringify({action: 'connect', host:"localhost",port:22,username:'user',password:'password'}));
+		};
+
+		mainSocket.onmessage = function (event) {
+			var msg = JSON.parse(event.data);
+			if(msg.action == "message"){
+				// handing the server message, we just write to xterm.js terminal
+				term.write(msg.message);
+			} else if(msg.action == "connection"){
+				// verifying our connection
+				if(!msg.success) alert("Connection to server failed!!! Please verify credentials");
+				ssh_ready = msg.success;
+			}
+		}
+		
+		mainSocket.onclose = function (event) {
+			console.log("Socket closed");
+			ssh_ready = false; 
+		}
+		
+		term.textarea.onkeydown = function (event) {
+			// do nothing when our SSH is not ready
+			if(!ssh_ready) return;
+			// do nothing till our socket has connected
+			if(mainSocket.readyState == mainSocket.CLOSED) return true;
+			
+			var keyName = event.key;
+			var keyCode = event.keyCode;
+			// disabling Ctrl,Alt,Shift buttons
+			if([16,17,18,91,230].indexOf(event.keyCode) !== -1){
+				event.preventDefault();
+				return false;
+			}
+			// Sending Ctrl + <key combination>
+			if(event.ctrlKey){
+				if(keyCode >=64 && keyCode <=95){
+					keyCode -= 64;
+					keyName = "Special";
+				}
+			}
+			// Handling special keys with their code
+			var specialKeys = {
+				"ArrowUp" : "[A",
+				"ArrowDown" : "[B",
+				"ArrowLeft" : "[D",
+				"ArrowRight" : "[C",
+				"Home" : "[H",
+				"End" : "[F",
+				"PageUp" : "[5~",
+				"PageDown" : "[6~",
+				"Insert" : "[2~",
+				"Delete" : "[3~",
+			};
+			// Detecting if we need to handle such special keys
+			var special = false;
+			if(typeof specialKeys[keyName] != "undefined"){
+				keyName = specialKeys[keyName];
+				special = true;
+			}
+			if(special){
+				// Send special
+				mainSocket.send(JSON.stringify({action: 'keySpecial', key: keyName}));
+			} else if(keyName.length==1){
+				// Send single characters [0-9|a-z|A-Z....]
+				mainSocket.send(JSON.stringify({action: 'key', key: keyName}));
+			} else {
+				// we send keycode instead of such key
+				mainSocket.send(JSON.stringify({action: 'keyCode', keyCode: keyCode}));
+			}
+			// Blocking button event for browser and say we have handled it
+			event.preventDefault();
+			return false;
+		};
+		
+	</script>
+
+</html>

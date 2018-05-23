@@ -29,11 +29,11 @@ You can just copy [shell.html](html/shell.html) and edit few things up depending
 mainSocket.send(JSON.stringify({action: 'connect', host:"localhost",port:22,username:'user',password:'password'}));
 ```
 ## Parameters
-  - action:		'connect' (default to connect for connection)
-  - host:		the host you would like to connect to. localhost, www.google.com, 192.168.1.5(this will connect to the server's local network and not your own)
-  - port:		default is 22, you can send the port you want
-  - username:	the username you want to connect to
-  - password:	the password you connect to server for the username
+  - `action`:		'connect' (default to connect for connection)
+  - `host`:		the host you would like to connect to. localhost, www.google.com, 192.168.1.5(this will connect to the server's local network and not your own)
+  - `port`:		default is 22, you can send the port you want
+  - `username`:	the username you want to connect to
+  - `password`:	the password you connect to server for the username
 
 
 Please feel free to modifiy code on you end, the application still needs upgrade since I only required few basics for my personal project and I wanted to share the code.

@@ -23,6 +23,11 @@ I wanted a simplest of the WebSocket server so I selected [this](https://github.
   1. `pip install git+https://github.com/Pithikos/python-websocket-server` (latest code)
   2. `pip install websocket-server` (might not be up-to-date)
 
+## Starting the server
+```
+python python/shel.py
+```
+
 # HTML Setup
 You can just copy [shell.html](html/shell.html) and edit few things up depending on your requirements. The main connection line looks like below and can be edited to set the host/username/password you required
 ```

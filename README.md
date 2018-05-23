@@ -2,10 +2,10 @@
 HTML5 based Remote SSH with Python backend
 
 # Table of Content
-  * Requirements
-  * Python setup
-  * WebsocketServer
-  * HTML Setup
+  * [Requirements](#requirements)
+  * [Python setup](#python-setup)
+  * [WebsocketServer](#websocketserver)
+  * [HTML Setup](#html-setup)
 
 # Requirements
   - Python 2.7 (Tested), may work with other version of Python
@@ -13,13 +13,13 @@ HTML5 based Remote SSH with Python backend
 
 # Python setup
 ## Paramiko
-`Paramiko<https://github.com/paramiko/paramiko/>` is a python based SSH client with good documentation. You can easily install it using following command
+[Paramiko](https://github.com/paramiko/paramiko/) is a python based SSH client with good documentation. You can easily install it using following command
 ```
 pip install paramiko
 ```
 
 ## WebsocketServer
-I wanted a simplest of the WebSocket server so I selected `this<https://github.com/Pithikos/python-websocket-server>`. As state `here<https://github.com/Pithikos/python-websocket-server#installation>` about the installation, you can easily install it by:
+I wanted a simplest of the WebSocket server so I selected [this](https://github.com/Pithikos/python-websocket-server). As state [here](https://github.com/Pithikos/python-websocket-server#installation) about the installation, you can easily install it by:
   1. `pip install git+https://github.com/Pithikos/python-websocket-server` (latest code)
   2. `pip install websocket-server` (might not be up-to-date)
 
@@ -34,3 +34,6 @@ mainSocket.send(JSON.stringify({action: 'connect', host:"localhost",port:22,user
   - port:		default is 22, you can send the port you want
   - username:	the username you want to connect to
   - password:	the password you connect to server for the username
+
+
+Please feel free to modifiy code on you end, the application still needs upgrade since I only required few basics for my personal project and I wanted to share the code.

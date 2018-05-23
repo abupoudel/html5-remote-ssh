@@ -4,6 +4,10 @@ import time										# Handling some sleep
 import json										# We are relying on JSON object to send/recieve between browser and socket
 from thread import start_new_thread				# Handling multiple SSH sessions
 from websocket_server import WebsocketServer	# Minimal WebSocket library
+import sys										# Forcing system encoding to UTF-8
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 # Client lists to handle connections
 clients = {}
